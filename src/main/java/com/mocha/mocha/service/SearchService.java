@@ -34,7 +34,7 @@ public class SearchService {
         try {
             UriComponents builder = UriComponentsBuilder.fromHttpUrl(movieKey.getApiUrl()+"/search/movie")
                     .queryParam("api_key",movieKey.getMovieKey())
-                    .queryParam("language","ko,en-US")
+                    .queryParam("language","ko")
                     .queryParam("query",name).build();
             System.out.print(builder);
             String response=restTemplate.getForObject(builder.toUri(),String.class);
