@@ -19,14 +19,14 @@ public class MovieGenreService {
     private final MovieGenreRepository movieGenreRepository;
     private final MovieRepository movieRepository;
 
-    public MovieGenre findOrCreateNew(String name) {
-
-        Genre genre=genreRepository.findByName(name).orElseGet(
-                ()->new Genre(name)
-        );
-        MovieGenre movieGenre = MovieGenre.createGenre(genre);
-        return movieGenre;
-    }
+//    public MovieGenre findOrCreateNew(String name) {
+//
+//        Genre genre=genreRepository.findByName(name).orElseGet(
+//                ()->new Genre(name)
+//        );
+//        MovieGenre movieGenre = MovieGenre.createGenre(genre);
+//        return movieGenre;
+//    }
 
 
 }

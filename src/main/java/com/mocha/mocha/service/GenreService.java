@@ -13,9 +13,9 @@ public class GenreService {
 
     private final GenreRepository genreRepository;
 
-//    public Genre findOrCreateNew(String name) {
-//        return genreRepository.findByName(name).orElseGet(
-//                () -> new Genre(name)
-//        );
-//    }
+    public Genre findOrCreateNew(String name) {
+        return genreRepository.findByName(name).orElseGet(
+                () -> genreRepository.save(new Genre(name))
+        );
+    }
 }

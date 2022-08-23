@@ -63,16 +63,18 @@ public class AddDummyData {
                 if(i != token.length-2) title.append(",");
             }
             Movie movie = Movie.builder()
-                    .id(movieId).tId(MovieIdToTid.get(movieId))
+                    .mId(movieId).tId(MovieIdToTid.get(movieId))
                     .title(title.toString())
-                    .movieGenres(Arrays.stream(names)
-                            .map(movieGenreService::findOrCreateNew)
-                            .collect(Collectors.toSet()))
                     .build();
-            for (MovieGenre movieGenre : movie.getMovieGenres()) {
-                movieGenre.setMovie(movie);
-            }
+            Set<Genre> genres = Arrays.stream(names)
+                    .map(genreService::findOrCreateNew)
+                    .collect(Collectors.toSet());
             movieRepository.save(movie);
+            for(Genre genre: genres){
+                MovieGenre movieGenre = MovieGenre.createMovieGenre(movie, genre);
+                movieGenreRepository.save(movieGenre);
+            }
+
 
 //            movieRepository.save(Movie.builder()
 //                    .id(movieId).tId(MovieIdToTid.get(movieId))
@@ -81,7 +83,7 @@ public class AddDummyData {
 //                            .map(movieGenreService::findOrCreateNew)
 //                            .collect(Collectors.toSet()))
 //                    .build());
-//
+
 
 
 //            Movie movie=Movie.builder()

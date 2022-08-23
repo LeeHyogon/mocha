@@ -23,14 +23,21 @@ public class Movie {
 
     private String title;
 
+    private Long mId;
     private Long tId;
 
     @OneToMany(mappedBy = "movie")
     private Set<MovieGenre> movieGenres=new HashSet<>();
 
     @Builder
-    public Movie(Long id, String title, Long tId, Set<MovieGenre> movieGenres) {
-        this.id = id;
+    public Movie(Long mId, String title, Long tId) {
+        this.mId = mId;
+        this.title = title;
+        this.tId = tId;
+    }
+    @Builder
+    public Movie(Long mId, String title, Long tId, Set<MovieGenre> movieGenres) {
+        this.mId = mId;
         this.title = title;
         this.tId = tId;
         this.movieGenres = movieGenres;

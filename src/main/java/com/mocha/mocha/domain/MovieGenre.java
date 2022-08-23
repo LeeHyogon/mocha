@@ -19,11 +19,11 @@ public class MovieGenre {
     @Column(name = "movie_genre_id")
     private Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="movie_id")
     private Movie movie;
 
-    @ManyToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="genre_id")
     private Genre genre;
 
