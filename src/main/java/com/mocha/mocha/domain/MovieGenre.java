@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.lang.reflect.Member;
 
 @Entity
 @Getter
@@ -26,10 +27,20 @@ public class MovieGenre {
     @JoinColumn(name="genre_id")
     private Genre genre;
 
-    public static MovieGenre createMovieGenre(Genre genre){
+    public static MovieGenre createMovieGenre(Movie movie ,Genre genre){
+        MovieGenre movieGenre=new MovieGenre();
+        movieGenre.setMovie(movie);
+        movieGenre.setGenre(genre);
+        return movieGenre;
+    }
+    public static MovieGenre createGenre(Genre genre){
         MovieGenre movieGenre=new MovieGenre();
         movieGenre.setGenre(genre);
         return movieGenre;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie=movie;
     }
 
     public void setGenre(Genre genre) {

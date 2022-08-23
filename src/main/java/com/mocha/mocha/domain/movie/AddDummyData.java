@@ -1,6 +1,9 @@
 package com.mocha.mocha.domain.movie;
 
+import com.mocha.mocha.domain.MovieGenre;
+import com.mocha.mocha.domain.genre.Genre;
 import com.mocha.mocha.repository.GenreRepository;
+import com.mocha.mocha.repository.MovieGenreRepository;
 import com.mocha.mocha.repository.MovieRepository;
 import com.mocha.mocha.service.GenreService;
 import com.mocha.mocha.service.MovieGenreService;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,11 +30,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/dummy")
 public class AddDummyData {
 
-    private final GenreRepository genresRepository;
+    private final GenreRepository genreRepository;
+    private final MovieGenreRepository movieGenreRepository;
+    private final MovieRepository movieRepository;
     private final GenreService genreService;
     private final MovieGenreService movieGenreService;
-
-    private final MovieRepository movieRepository;
     private final Map<Long, Long> MovieIdToTid;
 
 
@@ -51,22 +55,54 @@ public class AddDummyData {
 
             String[] token = line.split(",");
             Long movieId = Long.parseLong(token[0]);
-            String[] genre = token[token.length - 1].split("\\|");
+            String[] names = token[token.length - 1].split("\\|");
 
             StringBuilder title = new StringBuilder();
             for(int i = 1; i < token.length - 1; i++) {
                 title.append(token[i]);
                 if(i != token.length-2) title.append(",");
             }
-
-
-            movieRepository.save(Movie.builder()
+            Movie movie = Movie.builder()
                     .id(movieId).tId(MovieIdToTid.get(movieId))
                     .title(title.toString())
-                    .movieGenres(Arrays.stream(genre)
+                    .movieGenres(Arrays.stream(names)
                             .map(movieGenreService::findOrCreateNew)
                             .collect(Collectors.toSet()))
-                    .build());
+                    .build();
+            for (MovieGenre movieGenre : movie.getMovieGenres()) {
+                movieGenre.setMovie(movie);
+            }
+            movieRepository.save(movie);
+
+//            movieRepository.save(Movie.builder()
+//                    .id(movieId).tId(MovieIdToTid.get(movieId))
+//                    .title(title.toString())
+//                    .movieGenres(Arrays.stream(names)
+//                            .map(movieGenreService::findOrCreateNew)
+//                            .collect(Collectors.toSet()))
+//                    .build());
+//
+
+
+//            Movie movie=Movie.builder()
+//                    .id(movieId)
+//                    .tId(MovieIdToTid.get(movieId))
+//                    .title(title.toString())
+//                    .build();
+//            //DataIntegrityViolationException 에 대해 알아보자
+//            //https://velog.io/@dkajffkem/DataIntegrityViolationException-%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90
+//            //영속성컨텍스트에있는 save된 객체 movie2는 직접생성한 객체 movie는 실제 참조하고있는 주솟값이 다르다.
+//            //genre도 마찬가지로 주솟값이 다름.
+//
+//            Set<Genre> genres = Arrays.stream(names)
+//                    .map(genreService::findOrCreateNew)
+//                    .collect(Collectors.toSet());
+//            for(Genre genre : genres){
+//                MovieGenre movieGenre = MovieGenre.createMovieGenre(movie, genre);
+//                movieRepository.save(movie);
+//                movieGenreRepository.save(movieGenre);
+//                genreRepository.save(genre);
+//            }
 
         }
 
